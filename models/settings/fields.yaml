@@ -1,0 +1,31 @@
+tabs:
+  fields:
+    order_number_custom:
+      label: Custom order number format
+      type: checkbox
+      span: left
+      tab: Order number
+
+    order_number_format:
+      label: Order number format
+      tab: Order number
+      type: text
+      span: left
+      default: 'kb-@n(6)-@y'
+      trigger:
+        action: show
+        field: order_number_custom
+        condition: checked
+
+    order_number_count:
+      label: Order number count
+      comment: Only change this value if you know what you are doing ;-)
+      tab: Order number
+      type: number
+      span: left
+      cssClass: w-200
+      default: 1
+      trigger:
+        action: show
+        field: order_number_custom
+        condition: checked

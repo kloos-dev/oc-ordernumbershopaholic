@@ -1,0 +1,6 @@
+plugin:
+    name: 'codecycler.ordernumbershopaholic::lang.plugin.name'
+    description: 'codecycler.ordernumbershopaholic::lang.plugin.description'
+    author: Codecycler
+    icon: oc-icon-caret-square-o-up
+    homepage: ''
