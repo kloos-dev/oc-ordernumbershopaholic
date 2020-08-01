@@ -39,10 +39,10 @@ class OrderNumberFormat
 
     public function replaceNumber()
     {
-        $match = preg_match('/(@n)(\(\d\))/i', $this->sFormat, $matches);
+        $bMatch = preg_match('/(@n)(\(\d\))/i', $this->sFormat, $arMatches);
 
-        if ($match) {
-            $iNumberInt = preg_replace('/[\(\)]+/', '', $matches[2]);
+        if ($bMatch) {
+            $iNumberInt = preg_replace('/[\(\)]+/', '', $arMatches[2]);
 
             // Generate new number
             $sOrderCount = (string) $this->iOrderNumberCount;
@@ -54,8 +54,8 @@ class OrderNumberFormat
 
     public function replaceYear()
     {
-        $thisYear = Carbon::now()->format('Y');
+        $sThisYear = Carbon::now()->format('Y');
 
-        $this->sFormat = str_replace('@y', $thisYear, $this->sFormat);
+        $this->sFormat = str_replace('@y', $sThisYear, $this->sFormat);
     }
 }
