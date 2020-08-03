@@ -1,14 +1,14 @@
 tabs:
   fields:
     order_number_custom:
-      label: Custom order number format
+      label: 'codecycler.ordernumbershopaholic::lang.field.order_number_custom'
       type: checkbox
       span: left
-      tab: Order number
+      tab: 'codecycler.ordernumbershopaholic::lang.tab.order_number'
 
     order_number_format:
-      label: Order number format
-      tab: Order number
+      label: 'codecycler.ordernumbershopaholic::lang.field.order_number_format'
+      tab: 'codecycler.ordernumbershopaholic::lang.tab.order_number'
       type: text
       span: left
       default: 'kb-@n(6)-@y'
@@ -18,9 +18,9 @@ tabs:
         condition: checked
 
     order_number_count:
-      label: Order number count
-      comment: Only change this value if you know what you are doing ;-)
-      tab: Order number
+      label: 'codecycler.ordernumbershopaholic::lang.field.order_number_count'
+      comment: 'codecycler.ordernumbershopaholic::lang.comment.order_number_count'
+      tab: 'codecycler.ordernumbershopaholic::lang.tab.order_number'
       type: number
       span: left
       cssClass: w-200
