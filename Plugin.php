@@ -18,9 +18,9 @@ class Plugin extends PluginBase
     {
         return [
             'settings' => [
-                'label'       => 'Additional settings',
-                'description' => 'Manage additional settings',
-                'category'    => 'Webshop',
+                'label'       => 'codecycler.ordernumbershopaholic::lang.settigns.label',
+                'description' => 'codecycler.ordernumbershopaholic::lang.settigns.description',
+                'category'    => 'codecycler.ordernumbershopaholic::lang.settigns.category',
                 'icon'        => 'icon-star',
                 'class'       => 'Codecycler\OrdernumberShopaholic\Models\Settings',
                 'order'       => 500,
