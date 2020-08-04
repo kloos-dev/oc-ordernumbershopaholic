@@ -1,4 +1,6 @@
 1.0.1:
     - Initialize plugin.
 1.0.2:
-    - Improved variable names and added dependancy
+    - Improved variable names and added dependency
+1.0.3:
+    - Introduced an event for extending the formatter with your own variables

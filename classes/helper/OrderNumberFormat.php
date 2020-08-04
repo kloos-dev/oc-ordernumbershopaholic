@@ -1,6 +1,8 @@
 <?php namespace Codecycler\OrdernumberShopaholic\Classes\Helper;
 
-use Carbon\Carbon;
+use Codecycler\OrdernumberShopaholic\Classes\NumberVariable;
+use Codecycler\OrdernumberShopaholic\Classes\YearVariable;
+use Event;
 use Lovata\OrdersShopaholic\Models\Order;
 use October\Rain\Support\Traits\Singleton;
 use Codecycler\OrdernumberShopaholic\Models\Settings;
@@ -9,11 +11,40 @@ class OrderNumberFormat
 {
     use Singleton;
 
-    public $obOrder;
+    protected $obOrder;
 
-    public $sFormat;
+    protected $sFormat;
 
-    public $obLastOrder;
+    protected $obLastOrder;
+
+    const EVENT_EXTEND_VARIABLES = 'codecycler.ordernumberformat.variables_extend';
+
+    protected $arVariables = [
+        '@y' => [
+            YearVariable::class,
+        ],
+        '@n' => [
+            NumberVariable::class,
+        ],
+    ];
+
+    protected function init()
+    {
+        // Register all the variables
+        $arVariablesExtend = Event::fire(self::EVENT_EXTEND_VARIABLES, []);
+
+        foreach ($arVariablesExtend as $iIndex => $arExtend)
+        {
+            foreach ($arExtend as $sKey => $arVariable) {
+                if (in_array($sKey, $this->arVariables)) {
+                    continue;
+                }
+
+                // Add to variables
+                $this->arVariables[$sKey] = $arVariable;
+            }
+        }
+    }
 
     public function format($obOrder)
     {
@@ -28,8 +59,30 @@ class OrderNumberFormat
 
         $this->iOrderNumberCount = Settings::get('order_number_count', 1);
 
-        $this->replaceYear();
-        $this->replaceNumber();
+        foreach ($this->arVariables as $sKey => $arVariable) {
+            // Parse format string with each of the variables
+            $bMatch = $this->findMatch($sKey);
+
+            if (!$bMatch) {
+                continue;
+            }
+
+            // Get method and value
+            if (isset($this->arVariables[$sKey]['matches'][2])) {
+                $sVariable = preg_replace('/([\(\)])/i', '', $this->arVariables[$sKey]['matches'][2]);
+
+                if (is_numeric($sVariable)) {
+                    $sVariable = (int) $sVariable;
+                }
+            } else {
+                $sVariable = null;
+            }
+
+            $sValue = $arVariable[0]::getValue($this->obOrder, $sVariable);
+
+            // Replace with value
+            $this->sFormat = preg_replace('/(' . $sKey . ')(\(\d\))?/', $sValue, $this->sFormat);
+        }
 
         // Update the order count index
         Settings::set('order_number_count', $this->iOrderNumberCount + 1);
@@ -37,25 +90,12 @@ class OrderNumberFormat
         return $this->sFormat;
     }
 
-    public function replaceNumber()
+    public function findMatch($sKey)
     {
-        $bMatch = preg_match('/(@n)(\(\d\))/i', $this->sFormat, $arMatches);
+        $bMatch = preg_match('/(' . $sKey . ')(\(\d\))?/i', $this->sFormat, $arMatches);
 
-        if ($bMatch) {
-            $iNumberInt = preg_replace('/[\(\)]+/', '', $arMatches[2]);
+        $this->arVariables[$sKey]['matches'] = $arMatches;
 
-            // Generate new number
-            $sOrderCount = (string) $this->iOrderNumberCount;
-            $sNumber = str_pad($sOrderCount, $iNumberInt, "0", STR_PAD_LEFT);
-
-            $this->sFormat = preg_replace('/@n\([\d]\)/', $sNumber, $this->sFormat);
-        }
-    }
-
-    public function replaceYear()
-    {
-        $sThisYear = Carbon::now()->format('Y');
-
-        $this->sFormat = str_replace('@y', $sThisYear, $this->sFormat);
+        return $bMatch;
     }
 }
