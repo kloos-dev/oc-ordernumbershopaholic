@@ -4,3 +4,5 @@
     - Improved variable names and added dependency
 1.0.3:
     - Introduced an event for extending the formatter with your own variables
+1.0.4:
+    - Added Lovata.Shopaholic as a plugin dependency
