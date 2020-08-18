@@ -8,6 +8,7 @@ class Plugin extends PluginBase
 {
     public $require = [
         'Lovata.OrdersShopaholic',
+        'Lovata.Shopaholic',
     ];
 
     public function registerComponents()
